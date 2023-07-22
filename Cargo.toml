@@ -9,6 +9,8 @@ edition = "2021"
 hyper = { version = "0.14.27", features = ["full", "tcp"] }
 pyo3 = { version = "0.19.1", features = ["auto-initialize"] }
 rayon = "1.7.0"
+serde = "1.0.174"
+serde_json = "1.0.103"
 tokio = { version = "1.29.1", features = ["full"] }
 
 [build-dependencies]

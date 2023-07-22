@@ -20,7 +20,7 @@ async fn main() -> Result<()> {
         Ok::<_, hyper::Error>(service_fn(move |req| handle(req)))
     });
 
-    let addr = ([127, 0, 0, 1], 3000).into();
+    let addr = ([127, 0, 0, 1], 3001).into();
     let server = Server::bind(&addr).serve(make_svc);
 
     println!("Running server on {:?}", addr);

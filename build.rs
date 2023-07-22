@@ -1,18 +1,31 @@
-//build script to copy scripts from scripts/ next to src/ to the target output direcvtory so it's relative to the bin and can be accessed easily from the bin
 use std::env;
 use std::fs;
 use std::path::PathBuf;
 
 fn main() {
     let out_dir = env::var("PROFILE").unwrap();
+    let src_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     let dest_path = PathBuf::from(format!("target/{}/{}", out_dir, "scripts"));
-    fs::create_dir_all(&dest_path).unwrap();
 
-    for entry in fs::read_dir("scripts").unwrap() {
-        let entry = entry.unwrap();
-        let path = entry.path();
-        if path.is_file() {
-            fs::copy(&path, dest_path.join(path.file_name().unwrap())).unwrap();
+    println!("Source directory: {}", src_dir);
+    println!("Destination directory: {}", dest_path.display());
+
+    // If dest path exists and is a real file or path, remove it
+    if dest_path.exists() {
+        if dest_path.is_file() {
+            fs::remove_file(&dest_path).unwrap();
+        } else if dest_path.is_dir() {
+            fs::remove_dir_all(&dest_path).unwrap();
+        }
+    }
+
+    // Lets symlink the directory so that the files are always up to date
+    let src_path = PathBuf::from(format!("{}/{}", src_dir, "scripts"));
+    println!("Source path: {}", src_path.display());
+
+    if src_path.exists() {
+        if std::os::unix::fs::symlink(src_path, dest_path).is_ok() {
+            println!("Symlinked scripts/ to target/{}/scripts", out_dir);
         }
     }
 }

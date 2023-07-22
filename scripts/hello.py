@@ -1,2 +1,2 @@
 print("Hello World")
-result = 42
+result = 43
